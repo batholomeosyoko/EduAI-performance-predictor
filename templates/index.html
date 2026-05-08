@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduAI - Student Performance Predictor</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #4a5568;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .form-row .form-group {
+            flex: 1 1 220px;
+            min-width: 220px;
+        }
+        .form-row .form-group.full-width {
+            flex: 1 1 100%;
+        }
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            background: white;
+            transition: border-color 0.3s;
+        }
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .range-info {
+            font-size: 12px;
+            color: #718096;
+            margin-top: 5px;
+        }
+        .predict-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s;
+        }
+        .predict-btn:hover {
+            transform: translateY(-2px);
+        }
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            display: none;
+        }
+        .result.success {
+            background: #f0fff4;
+            border: 2px solid #9ae6b4;
+        }
+        .result.error {
+            background: #fed7d7;
+            border: 2px solid #feb2b2;
+        }
+        .grade-display {
+            font-size: 2em;
+            font-weight: bold;
+            text-align: center;
+            margin: 10px 0;
+        }
+        .confidence {
+            text-align: center;
+            font-size: 1.2em;
+            margin: 10px 0;
+        }
+        .advice {
+            margin-top: 15px;
+            font-style: italic;
+            text-align: center;
+        }
+        .probabilities {
+            margin-top: 20px;
+        }
+        .prob-bar {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+        }
+        .prob-label {
+            width: 120px;
+            font-weight: 600;
+        }
+        .prob-bar-fill {
+            flex: 1;
+            height: 20px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            margin-left: 10px;
+            overflow: hidden;
+        }
+        .prob-bar-inner {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 10px;
+            transition: width 0.5s;
+        }
+        .prob-value {
+            margin-left: 10px;
+            font-weight: 600;
+        }
+        .loading {
+            text-align: center;
+            display: none;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #718096;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎓 EduAI - Student Performance Predictor</h1>
+
+        <form id="predictionForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="gpa">GPA (Grade Point Average)</label>
+                    <input type="number" id="gpa" name="gpa" step="0.01" min="0" max="4" required>
+                    <div class="range-info">Range: 0.00 - 4.00</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="studytimeweekly">Study Time Weekly (hours)</label>
+                    <input type="number" id="studytimeweekly" name="studytimeweekly" step="0.1" min="0" max="30" required>
+                    <div class="range-info">Range: 0-30 hours</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="absences">Number of Absences</label>
+                    <input type="number" id="absences" name="absences" min="0" max="30" required>
+                    <div class="range-info">Range: 0-30 days</div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="age">Age</label>
+                    <input type="number" id="age" name="age" min="14" max="19" required>
+                    <div class="range-info">Range: 14-19 years</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="gender">Gender</label>
+                    <select id="gender" name="gender" required>
+                        <option value="0">Male</option>
+                        <option value="1">Female</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="ethnicity">Ethnicity</label>
+                    <select id="ethnicity" name="ethnicity" required>
+                        <option value="0">Caucasian</option>
+                        <option value="1">African American</option>
+                        <option value="2">Asian</option>
+                        <option value="3">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="parentaleducation">Parental Education Level</label>
+                    <select id="parentaleducation" name="parentaleducation" required>
+                        <option value="0">None</option>
+                        <option value="1">High School</option>
+                        <option value="2">Some College</option>
+                        <option value="3">Bachelor's</option>
+                        <option value="4">Higher</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="tutoring">Tutoring</label>
+                    <select id="tutoring" name="tutoring" required>
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="parentalsupport">Parental Support</label>
+                    <select id="parentalsupport" name="parentalsupport" required>
+                        <option value="0">None</option>
+                        <option value="1">Low</option>
+                        <option value="2">Moderate</option>
+                        <option value="3">High</option>
+                        <option value="4">Very High</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="extracurricular">Extracurricular Activities</label>
+                    <select id="extracurricular" name="extracurricular" required>
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="sports">Sports</label>
+                    <select id="sports" name="sports" required>
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="music">Music</label>
+                    <select id="music" name="music" required>
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="volunteering">Volunteering</label>
+                    <select id="volunteering" name="volunteering" required>
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="predict-btn">🔮 Predict Student Performance</button>
+        </form>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Analyzing student data...</p>
+        </div>
+
+        <div class="result" id="result"></div>
+
+        <div class="footer">
+            <p>Powered by Machine Learning • Built with Flask</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('predictionForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const formData = {
+                Age: parseInt(document.getElementById('age').value),
+                Gender: parseInt(document.getElementById('gender').value),
+                Ethnicity: parseInt(document.getElementById('ethnicity').value),
+                ParentalEducation: parseInt(document.getElementById('parentaleducation').value),
+                StudyTimeWeekly: parseFloat(document.getElementById('studytimeweekly').value),
+                Absences: parseInt(document.getElementById('absences').value),
+                Tutoring: parseInt(document.getElementById('tutoring').value),
+                ParentalSupport: parseInt(document.getElementById('parentalsupport').value),
+                Extracurricular: parseInt(document.getElementById('extracurricular').value),
+                Sports: parseInt(document.getElementById('sports').value),
+                Music: parseInt(document.getElementById('music').value),
+                Volunteering: parseInt(document.getElementById('volunteering').value),
+                GPA: parseFloat(document.getElementById('gpa').value)
+            };
+
+            // Show loading
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('result').style.display = 'none';
+
+            try {
+                const response = await fetch('/api/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                // Hide loading
+                document.getElementById('loading').style.display = 'none';
+
+                const resultDiv = document.getElementById('result');
+                resultDiv.style.display = 'block';
+
+                if (data.success) {
+                    resultDiv.className = 'result success';
+                    resultDiv.innerHTML = `
+                        <div class="grade-display">${data.grade}</div>
+                        <div class="confidence">Confidence: ${data.confidence}%</div>
+                        <div class="advice">${data.advice}</div>
+                        <div class="probabilities">
+                            <h3>Grade Probabilities:</h3>
+                            ${Object.entries(data.probabilities).map(([grade, prob]) => `
+                                <div class="prob-bar">
+                                    <div class="prob-label">${grade}</div>
+                                    <div class="prob-bar-fill">
+                                        <div class="prob-bar-inner" style="width: ${prob}%"></div>
+                                    </div>
+                                    <div class="prob-value">${prob}%</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.innerHTML = `
+                        <h3>Error</h3>
+                        <p>${data.error}</p>
+                    `;
+                }
+            } catch (error) {
+                document.getElementById('loading').style.display = 'none';
+                const resultDiv = document.getElementById('result');
+                resultDiv.style.display = 'block';
+                resultDiv.className = 'result error';
+                resultDiv.innerHTML = `
+                    <h3>Network Error</h3>
+                    <p>Unable to connect to the prediction service. Please try again.</p>
+                `;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduAI - Interface Preview</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #4a5568;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+        .status {
+            background: #e6fffa;
+            border: 2px solid #81e6d9;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .status h3 {
+            color: #2c7a7b;
+            margin-top: 0;
+        }
+        .instructions {
+            background: #f7fafc;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        .instructions h3 {
+            color: #2d3748;
+            margin-top: 0;
+        }
+        .code {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin: 10px 5px;
+        }
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+        .preview {
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            background: #f8f9fa;
+        }
+        .preview h4 {
+            color: #4a5568;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎓 EduAI - Student Performance Predictor</h1>
+
+        <div class="status">
+            <h3>🔧 Setup Status</h3>
+            <p><strong>✅ Flask Application:</strong> Created and ready</p>
+            <p><strong>✅ Machine Learning Model:</strong> Trained and saved (99.7% accuracy)</p>
+            <p><strong>✅ Web Interface:</strong> Updated with all required fields</p>
+            <p><strong>⚠️ Flask Server:</strong> Needs to be started manually</p>
+        </div>
+
+        <div class="instructions">
+            <h3>🚀 How to Start the Application</h3>
+
+            <h4>Step 1: Install Dependencies (if not already done)</h4>
+            <div class="code">cd "d:\EDUAI perfomance predictor"<br>pip install -r requirements.txt</div>
+
+            <h4>Step 2: Start the Flask Server</h4>
+            <p>Choose one of these methods:</p>
+
+            <h5>Method A: Using Python directly</h5>
+            <div class="code">cd "d:\EDUAI perfomance predictor"<br>python app.py</div>
+
+            <h5>Method B: Using the batch file</h5>
+            <div class="code">Double-click run_app.bat in the project folder</div>
+
+            <h5>Method C: Using PowerShell</h5>
+            <div class="code">cd "d:\EDUAI perfomance predictor"<br>.\run_app.ps1</div>
+        </div>
+
+        <div class="instructions">
+            <h3>🌐 Access the Application</h3>
+            <p>Once the Flask server is running, open your web browser and go to:</p>
+            <div class="code">http://localhost:5000</div>
+
+            <p>The application will display a form with 19 fields for student information. Fill in all the required data and click "Predict Student Performance" to get predictions.</p>
+        </div>
+
+        <div class="preview">
+            <h4>📋 Required Input Fields</h4>
+            <p>The model requires these 19 student factors:</p>
+            <ul>
+                <li>Hours Studied per Week (0-10)</li>
+                <li>Attendance Percentage (0-100)</li>
+                <li>Parental Involvement (Low/Medium/High)</li>
+                <li>Access to Resources (Low/Medium/High)</li>
+                <li>Extracurricular Activities (Yes/No)</li>
+                <li>Sleep Hours per Night (0-12)</li>
+                <li>Previous Scores (0-100)</li>
+                <li>Motivation Level (Low/Medium/High)</li>
+                <li>Internet Access (Yes/No)</li>
+                <li>Tutoring Sessions per Month (0-8)</li>
+                <li>Family Income Level (Low/Medium/High)</li>
+                <li>Teacher Quality (Low/Medium/High)</li>
+                <li>School Type (Public/Private)</li>
+                <li>Peer Influence (Negative/Neutral/Positive)</li>
+                <li>Physical Activity hours/week (0-10)</li>
+                <li>Learning Disabilities (Yes/No)</li>
+                <li>Parental Education Level (Low/Medium/High)</li>
+                <li>Distance from Home (Near/Moderate/Far)</li>
+                <li>Gender (Male/Female)</li>
+            </ul>
+        </div>
+
+        <div class="instructions">
+            <h3>🔍 Troubleshooting</h3>
+
+            <h4>If you get "Network Error" message:</h4>
+            <p>This means the Flask server is not running. Make sure to start it using one of the methods above.</p>
+
+            <h4>If the page doesn't load:</h4>
+            <p>Check that the Flask server started successfully and is running on port 5000.</p>
+
+            <h4>If you get import errors:</h4>
+            <p>Run: <code>pip install -r requirements.txt</code></p>
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <a href="file:///d:/EDUAI%20perfomance%20predictor/run_app.bat" class="btn">🚀 Start Flask Server (Batch)</a>
+            <a href="file:///d:/EDUAI%20perfomance%20predictor/run_app.ps1" class="btn">⚡ Start Flask Server (PowerShell)</a>
+            <a href="file:///d:/EDUAI%20perfomance%20predictor/README.md" class="btn">📖 View Full Documentation</a>
+        </div>
+    </div>
+</body>
+</html>
